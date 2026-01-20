@@ -1,0 +1,12 @@
+langchain-openai
+langchain-community
+langchain-text-splitters
+langchain-classic
+langchain-pinecone
+"pinecone[asyncio]"
+tiktoken
+python-dotenv
+ipython
+pypdf
+docx2txt
+langchain
