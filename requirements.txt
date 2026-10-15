@@ -1,12 +1,22 @@
+# Environment Variables
+python-dotenv
+
+# OpenAI
+openai
+tiktoken
 langchain-openai
+
+# LangChain
+langchain
+langchain-classic
+langchain-core
 langchain-community
 langchain-text-splitters
-langchain-classic
+
+# Pinecone Vector Database
+pinecone
 langchain-pinecone
-"pinecone[asyncio]"
-tiktoken
-python-dotenv
-ipython
+
+# Document Processing
 pypdf
 docx2txt
-langchain
