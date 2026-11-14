@@ -1,0 +1,11 @@
+# Python 3.10 or newer. Tested with Python 3.13 and Gradio 6.31.
+numpy>=1.24
+requests>=2.31
+PyYAML>=6.0
+python-dotenv>=1.0
+pyttsx3>=2.98          # offline backup voice (Windows SAPI5 / eSpeak / macOS)
+sounddevice>=0.4.6     # streaming playback on this computer's speakers
+gradio>=5.0            # demo app
+fastapi>=0.110         # optional HTTP service (app/api.py)
+uvicorn>=0.27
+pytest>=8.0            # tests

@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "team4-voice"
+version = "1.0.0"
+description = "Text-to-speech engine for the AI Ancestor Interaction project (GNG5140 Team 4)"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "requests>=2.31", "PyYAML>=6.0", "python-dotenv>=1.0",
+                "pyttsx3>=2.98", "sounddevice>=0.4.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

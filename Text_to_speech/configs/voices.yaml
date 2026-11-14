@@ -1,0 +1,31 @@
+# Voice profiles.
+#   kind: stock  - a ready-made provider voice; belongs to no real person.
+#   kind: cloned - a copy of the Principal's own voice. The engine REFUSES to use it
+#                  unless consent.granted is true AND consent.record_id is filled in.
+# offline_voice_hint picks the backup voice by name, e.g. "David" or "Zira" on Windows.
+
+default_voice: stock_warm_male
+
+voices:
+  stock_warm_male:
+    display_name: "Warm older male (stock)"
+    kind: stock
+    elevenlabs_voice_id: JBFqnCBsd6RMkjVDRZzb     # ElevenLabs default voice "George"
+    offline_voice_hint: "David"
+
+  stock_warm_female:
+    display_name: "Warm female (stock)"
+    kind: stock
+    elevenlabs_voice_id: 21m00Tcm4TlvDq8ikWAM     # ElevenLabs default voice "Rachel"
+    offline_voice_hint: "Zira"
+
+  principal_clone:
+    display_name: "Principal's own voice (clone)"
+    kind: cloned
+    elevenlabs_voice_id: ""        # filled in after the Principal records voice samples
+    offline_voice_hint: "David"
+    consent:
+      granted: false               # set true only with a signed consent record
+      record_id: ""                # e.g. CONSENT-2026-001
+      granted_by: ""
+      date: ""

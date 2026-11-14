@@ -5,3 +5,9 @@ langchain-core>=0.3
 langchain-openai>=0.2
 langchain-text-splitters>=0.3
 python-dotenv>=1.0
+# --- needed by the team's TTS engine (Text_to_speech/src/voice) ---
+numpy>=1.24
+requests>=2.31
+PyYAML>=6.0
+pyttsx3>=2.98
+sounddevice>=0.4.6

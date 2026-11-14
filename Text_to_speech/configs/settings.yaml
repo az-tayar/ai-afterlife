@@ -1,0 +1,49 @@
+# TTS engine settings - AI Ancestor Interaction (Team 4, GNG5140)
+# The ElevenLabs API key is NOT stored here. Put it in the .env file
+# (copy .env.example to .env) so it never ends up in the team repository.
+
+tts:
+  principal_name: "Walter"        # fictional test Principal used for all testing (no real family data)
+  default_voice: stock_warm_male  # key from configs/voices.yaml
+  mode: auto                      # auto = ElevenLabs, offline voice as backup
+                                  # elevenlabs = cloud only, offline = no internet needed
+
+  elevenlabs:
+    base_url: https://api.elevenlabs.io
+    model_id: eleven_flash_v2_5   # ElevenLabs' low-latency model
+    connect_timeout_s: 3          # give up connecting after this -> backup voice
+    read_timeout_s: 5             # give up if no audio arrives for this long -> backup voice
+    chunk_bytes: 2048             # ~46 ms of audio per network read
+    voice_settings:
+      stability: 0.5
+      similarity_boost: 0.75
+      style: 0.0
+      use_speaker_boost: true
+      speed: 0.95                 # slightly slower for older listeners (0.7 - 1.2)
+
+  offline:
+    rate_wpm: 165                 # speaking rate of the backup voice, words per minute
+    timeout_s: 20
+
+  chunking:                       # how the answer is cut into phrases (characters)
+    first_min_chars: 30           # first phrase may stop at a comma once this long
+    min_chars: 40                 # later phrases: merge sentences shorter than this
+    soft_max_chars: 160           # later phrases: break at a comma once this long
+    hard_max_chars: 260           # never send a phrase longer than this
+
+  fallback:
+    retry_cloud_after_s: 10       # after a cloud failure, try ElevenLabs again after this
+
+  cache:
+    mode: all                     # all | fixed (disclosure only) | off
+    dir: .tts_cache
+    max_mb: 200
+
+  disclosure:                     # spoken once at the start of each visitor session
+    enabled: false
+    text: "Hello. You are talking with an AI representation of {principal_name}. It answers only from memories {principal_name} recorded and approved."
+
+  metrics:
+    log_path: logs/tts_metrics.jsonl
+    first_audio_target_ms: 500    # blueprint Phase 3 target: TTS first audio
+    end_to_end_target_ms: 2000    # blueprint: end of question -> first audible speech
