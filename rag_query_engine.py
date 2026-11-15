@@ -299,17 +299,20 @@ class Speaker:
         if not ok:
             raise RuntimeError(why)
         self.engine = get_engine()
+        self.player = LocalPlayer()          # kept so stop() can silence the speakers at once
         self.mode, self.voice = mode, voice
         self.session_id = uuid.uuid4().hex  # lets the engine speak the AI notice once per session
         self.engine.warm_up()
 
     def speak(self, text_stream):
-        """Blocks until the audio has finished playing."""
-        return self.engine.speak(text_stream, mode=self.mode, voice=self.voice,
-                                 session_id=self.session_id)
+        """Blocks until the audio has finished playing (or stop() is called)."""
+        return self.engine.speak(text_stream, player=self.player, mode=self.mode,
+                                 voice=self.voice, session_id=self.session_id)
 
     def stop(self):
+        """Cancel the rest of the answer and silence the speakers immediately."""
         self.engine.interrupt()
+        self.player.stop()
 
     @property
     def last_metrics(self):
@@ -345,6 +348,7 @@ FOLLOW_UP = re.compile(r"\b(he|she|they|them|it|that|those|this|these|there|then
 class Companion:
     def __init__(self, retriever, model, temperature=0, debug=False, speaker=None):
         self.retriever, self.debug, self.speaker, self.history = retriever, debug, speaker, []
+        self.answer_buffer = ""  # text of the answer being (or last) spoken; used to spot echo
         self.llm = ChatOpenAI(model=model, temperature=temperature, streaming=True)
         self.rewriter = ChatOpenAI(model=model, temperature=0, max_tokens=60)
         prompt = ChatPromptTemplate.from_messages([
@@ -363,8 +367,10 @@ class Companion:
         out = self.rewriter.invoke(REWRITE_PROMPT.format(history=hist, question=question))
         return out.content.strip() or question
 
-    def ask(self, question):
+    def ask(self, question, stop=None):
+        """Answer a question. If `stop` (threading.Event) is set, the answer is cut short."""
         t0 = time.perf_counter()
+        self.answer_buffer = ""
         standalone = self._standalone(question)
         t1 = time.perf_counter()
         docs, fused = self.retriever.search(standalone)
@@ -386,9 +392,12 @@ class Companion:
             """LLM stream: print each piece, remember it, and hand it on to the voice."""
             for piece in self.chain.stream({"context": context, "history": messages,
                                             "question": question}):
+                if stop is not None and stop.is_set():
+                    return                   # interrupted: stop reading the LLM stream
                 if state["first"] is None:
                     state["first"] = time.perf_counter()
                 answer.append(piece)
+                self.answer_buffer += piece
                 print(piece, end="", flush=True)
                 yield piece
 
@@ -407,7 +416,10 @@ class Companion:
         except Exception as e:               # a voice problem must not lose the text answer
             print(f"\n[voice error: {e}]")
         finally:
-            stream.close()
+            try:
+                stream.close()
+            except ValueError:               # voice thread still inside the stream; it stops on its own
+                pass
         print()
         first = state["first"]
 
@@ -424,6 +436,7 @@ class Companion:
                   f"(target < 2000) | TTS first audio {m.first_audio_ms} ms | voices {m.backends}")
             for note in m.fallbacks + m.errors:
                 print(f"[voice note] {note}")
+        return text
 
 
 # ======================================================
