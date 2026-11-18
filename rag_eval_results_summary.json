@@ -1,0 +1,55 @@
+{
+  "run_utc": "2026-11-18T18:33:57.830512+00:00",
+  "pdf_sha256": "71097b184994e1e3848686cb2515c024beacfd43f172a3382abbd785d545aec4",
+  "dataset_sha256": "c272a04e5a769e77c77397d090bd5482b4bd3930dc78ef9faf446769b5cc31ff",
+  "model": "gpt-4.1-mini",
+  "judge_model": "gpt-4.1-mini",
+  "embedding": "text-embedding-3-small",
+  "index": "ancestor-life-story",
+  "namespace": "person-001",
+  "cases_requested": 40,
+  "cases_succeeded": 40,
+  "cases_failed": 0,
+  "factual_accuracy": {
+    "passed": 20,
+    "evaluated": 20,
+    "rate_pct": 100.0
+  },
+  "unsupported_handling": {
+    "passed": 10,
+    "evaluated": 10,
+    "rate_pct": 100.0
+  },
+  "personality_consistency": {
+    "passed": 10,
+    "evaluated": 10,
+    "rate_pct": 100.0
+  },
+  "fabricated_personal_claims": {
+    "detected": 1,
+    "evaluated": 40
+  },
+  "retrieval_hit_rate": {
+    "hits": 30,
+    "evaluated": 30
+  },
+  "retrieval_latency": {
+    "count": 40,
+    "p50_ms": 344.33500000000004,
+    "p95_ms": 656.7029999999999,
+    "mean_ms": 394.2895
+  },
+  "first_token_latency": {
+    "count": 40,
+    "p50_ms": 790.5,
+    "p95_ms": 1241.8724999999997,
+    "mean_ms": 875.40125
+  },
+  "total_response_latency": {
+    "count": 40,
+    "p50_ms": 1209.96,
+    "p95_ms": 1817.6884999999997,
+    "mean_ms": 1315.27025
+  },
+  "caveat": "LLM judge scores are provisional and require human review; no-judge mode has no automatic correctness scores. Timings are text-only, not STT/TTS end-to-end."
+}
